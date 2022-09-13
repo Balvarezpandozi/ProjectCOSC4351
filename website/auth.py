@@ -20,6 +20,8 @@ def login():
                 return redirect(url_for('views.home'))
             else:
                 flash('Invalid credentials.', category='error')
+        else:
+            flash('User was not found.', category='error')
 
     return render_template('login.html', user=current_user)
 
