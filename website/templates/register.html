@@ -3,14 +3,22 @@
 {% block content %}
     <h1>Register</h1>
     <form method="POST">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
         <label for="email">Email</label>
         <input type="email" name="email" id="email">
         <label for="password">Password</label>
         <input type="password" name="password" id="password">
         <label for="confirm-password">Confirm Password</label>
         <input type="password" name="confirm-password" id="confirm-password">
+        <label for="mailing-address">Mailing Address</label>
+        <input type="text" name="mailing-address" id="mailing-address">
+        <label for="billing-address">Billing Address</label>
+        <input type="text" name="billing-address" id="billing-address">
+        <label for="phone-number">Phone Number</label>
+        <input type="text" name="phone-number" id="phone-number">
+        <label for="preffered-payment">Preffered Payment</label>
+        <input type="text" name="preffered-payment" id="preffered-payment">
         <button type="submit">Register</button>
     </form>
 {% endblock %}
