@@ -28,28 +28,47 @@ def login():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
+        name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm-password')
+        mailingAddress = request.form.get('mailing-address')
+        billingAddress = request.form.get('billing-address')
+        phoneNumber = request.form.get('phone-number')
+        prefferedPaymentMethod = request.form.get('preffered-payment')
 
-        user = User.query.filter(or_(User.email==email, User.username==username)).first()
+        user = User.query.filter(User.email==email).first()
         print("User " + str(user), flush=True)
         if user:
             flash('User already exists!', category='error')
         elif len(email) < 4:
             flash('Email must be at least 4 characters long.', category='error')
-        elif len(username) < 2:
-            flash('Username must be at least 2 characters long.', category='error')
+        elif len(name) < 2:
+            flash('Name must be at least 2 characters long.', category='error')
         elif password != confirm_password:
             flash('Passwords do not match.', category='error')
         elif len(password) < 6:
             flash('Password must be at least 6 characters long.', category='error')
+        elif len(mailingAddress) < 1:
+            flash('Please enter a mailing address.', category='error')
+        elif len(billingAddress) < 1:
+            flash('Please enter a billing address.', category='error')
+        elif len(phoneNumber) < 1:
+            flash('Please enter a phone number.', category='error')
+        elif len(prefferedPaymentMethod) < 1:
+            flash('Please enter a payment method.', category='error')
         else:
             new_user = User(
-                username=username, 
+                name=name, 
                 email=email, 
-                password=generate_password_hash(password, method='sha256'))
+                password=generate_password_hash(password, method='sha256'),
+                mailingAddress=mailingAddress,
+                billingAddress=billingAddress,
+                phoneNumber=phoneNumber,
+                prefferedPaymentMethod=prefferedPaymentMethod,
+                points=0,
+                accountType="Customer")
+                
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
