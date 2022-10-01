@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Reserve{% endblock %}
+{% block content %}
+    <h1>Make Reservation</h1>
+    <form method="POST">
+        <label for="date">Date</label>
+        <input type="date" name="date" id="date">
+        <label for="time">Time</label>
+        <input type="time" name="time" id="time">
+        <label for="party-size">Party Size</label>
+        <input type="number" name="party-size" id="party-size">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email">
+        <label for="phone-number">Phone Number</label>
+        <input type="text" name="phone-number" id="phone-number">
+        <button type="submit">Reserve</button>
+    </form>
+{% endblock %}
