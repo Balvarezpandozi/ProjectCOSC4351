@@ -14,6 +14,8 @@
             {{ reservation.email }} 
             {{ reservation.phone_number }}
             {{ reservation.user_id }}
+            <a href="/edit-reservation/{{ reservation.id }}">Edit</a>
+            <button onClick="deleteReservation({{ reservation.id }})">Delete note</button>
         </li>
         {% endfor %}
     </ul>

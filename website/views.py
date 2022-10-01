@@ -63,6 +63,22 @@ def reserve():
 
     return render_template('reserve.html', user=current_user)
 
+@views.route('/edit-reservation/<reservation_id>', methods=['GET', 'POST'])
+@login_required
+def edit_reservation(reservation_id):
+    reservation = Reservation.query.get(reservation_id)
+    return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
+@views.route('/delete-reservation', methods=['POST'])
+@login_required
+def delete_reservation():
+    reservation = json.loads(request.data)
+    reservation_id = reservation['reservationId']
+    reservation = Reservation.query.get(reservation_id)
+    if reservation.user_id == current_user.id or reservation.user_id == None: 
+        db.session.delete(reservation)
+        db.session.commit()
+    return jsonify({})
+
 @views.route('/delete-note', methods=['POST'])
 @login_required
 def delete_note():

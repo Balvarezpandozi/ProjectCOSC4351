@@ -35,7 +35,6 @@ class Reservation(db.Model):
     name = db.Column(db.String(120))
     email = db.Column(db.String(120))
     phone_number = db.Column(db.String(120))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tables  = db.relationship('Table')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
