@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
-from .models import Note, Reservation, Table
+from .models import Reservation
 from . import db
 import json
 
@@ -67,14 +67,52 @@ def reserve():
 @login_required
 def edit_reservation(reservation_id):
     reservation = Reservation.query.get(reservation_id)
+
+    if reservation.user_id != current_user.id and current_user.account_type != "admin":
+        return redirect(url_for('views.reservations'))
+
+    if request.method == 'POST':
+        date = list(map(lambda x: int(x), request.form.get('date').split('-')))
+        time = list(map(lambda x: int(x), request.form.get('time').split(':')))
+        party_size = request.form.get('party-size')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone_number = request.form.get('phone-number')
+        start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+        end_date_time = datetime(date[0], date[1], date[2], time[0]+1, time[1])
+
+        if len(date) < 1:
+            flash('Please enter a date.', category='error')
+        elif len(time) < 1:
+            flash('Please enter a time.', category='error')
+        elif len(party_size) < 1:
+            flash('Please enter a party size.', category='error')
+        elif len(name) < 1:
+            flash('Please enter a name.', category='error')
+        elif len(email) < 1:
+            flash('Please enter an email.', category='error')
+        elif len(phone_number) < 1:
+            flash('Please enter a phone number.', category='error')
+        else:
+            reservation.start_time = start_date_time
+            reservation.end_time = end_date_time
+            reservation.party_size = party_size
+            reservation.name = name
+            reservation.email = email
+            reservation.phone_number = phone_number
+            db.session.commit()
+            flash('Reservation updated!', category='success')
+            return redirect(url_for('views.reservations'))
+     
     return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
+    
 @views.route('/delete-reservation', methods=['POST'])
 @login_required
 def delete_reservation():
     reservation = json.loads(request.data)
     reservation_id = reservation['reservationId']
     reservation = Reservation.query.get(reservation_id)
-    if reservation.user_id == current_user.id or reservation.user_id == None: 
+    if reservation.user_id == current_user.id or current_user.account_type == "admin": 
         db.session.delete(reservation)
         db.session.commit()
     return jsonify({})

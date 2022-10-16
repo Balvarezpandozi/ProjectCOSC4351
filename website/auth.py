@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User, Note
+from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 from . import db
@@ -67,8 +67,7 @@ def register():
                 phone_number=phone_number,
                 preffered_payment_method=preffered_payment_method,
                 points=0,
-                account_type="Customer")
-                
+                account_type="Customer")            
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
