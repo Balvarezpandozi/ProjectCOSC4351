@@ -17,7 +17,7 @@ def login():
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
                 flash('You have been logged in.', category='success')
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.landing'))
             else:
                 flash('Invalid credentials.', category='error')
         else:
@@ -32,10 +32,10 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm-password')
-        mailingAddress = request.form.get('mailing-address')
-        billingAddress = request.form.get('billing-address')
-        phoneNumber = request.form.get('phone-number')
-        prefferedPaymentMethod = request.form.get('preffered-payment')
+        mailing_address = request.form.get('mailing-address')
+        billing_address = request.form.get('billing-address')
+        phone_number = request.form.get('phone-number')
+        preffered_payment_method = request.form.get('preffered-payment')
 
         user = User.query.filter(User.email==email).first()
         print("User " + str(user), flush=True)
@@ -49,31 +49,31 @@ def register():
             flash('Passwords do not match.', category='error')
         elif len(password) < 6:
             flash('Password must be at least 6 characters long.', category='error')
-        elif len(mailingAddress) < 1:
+        elif len(mailing_address) < 1:
             flash('Please enter a mailing address.', category='error')
-        elif len(billingAddress) < 1:
+        elif len(billing_address) < 1:
             flash('Please enter a billing address.', category='error')
-        elif len(phoneNumber) < 1:
+        elif len(phone_number) < 1:
             flash('Please enter a phone number.', category='error')
-        elif len(prefferedPaymentMethod) < 1:
+        elif len(preffered_payment_method) < 1:
             flash('Please enter a payment method.', category='error')
         else:
             new_user = User(
                 name=name, 
                 email=email, 
                 password=generate_password_hash(password, method='sha256'),
-                mailingAddress=mailingAddress,
-                billingAddress=billingAddress,
-                phoneNumber=phoneNumber,
-                prefferedPaymentMethod=prefferedPaymentMethod,
+                mailing_address=mailing_address,
+                billing_address=billing_address,
+                phone_number=phone_number,
+                preffered_payment_method=preffered_payment_method,
                 points=0,
-                accountType="Customer")
+                account_type="Customer")
                 
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Successfully registered.', category='success')
-            return redirect(url_for('views.home'))
+            return redirect(url_for('views.landing'))
 
     return render_template('register.html', user=current_user)
 
@@ -82,4 +82,4 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.landing'))

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Landing{% endblock %}
+{% block content %}
+    <h1>Reservations</h1>
+    <a href="/reserve">Make Reservation</a>
+
+    <ul>
+        {% for reservation in reservations %}
+        <li>
+            {{ reservation.start_time }} 
+            {{ reservation.end_time }} 
+            {{ reservation.party_size }} 
+            {{ reservation.name }} 
+            {{ reservation.email }} 
+            {{ reservation.phone_number }}
+            {{ reservation.user_id }}
+            <a href="/edit-reservation/{{ reservation.id }}">Edit</a>
+            <button onClick="deleteReservation({{ reservation.id }})">Delete note</button>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}}  
