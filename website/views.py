@@ -5,7 +5,6 @@ from .models import Reservation
 from . import db
 import json
 
-
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['GET'])
@@ -120,18 +119,3 @@ def delete_reservation():
         db.session.delete(reservation)
         db.session.commit()
     return jsonify({})
-
-@views.route('/delete-note', methods=['POST'])
-@login_required
-def delete_note():
-    note = json.loads(request.data)
-    note_id = note['noteId']
-    note = Note.query.get(note_id)
-
-    if note.user_id == current_user.id:
-        db.session.delete(note)
-        db.session.commit()
-        flash("Note deleted.", category='success')
-        return jsonify({'status': 'success'})
-    
-    return jsonify({'status': 'error'})
