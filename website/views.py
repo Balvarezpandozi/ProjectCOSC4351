@@ -29,7 +29,8 @@ def reserve():
         phone_number = request.form.get('phone-number')
         start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
         end_date_time = datetime(date[0], date[1], date[2], time[0]+1, time[1])
-
+        register_user = request.form.get('register-user')
+        print(register_user, flush=True)
         if len(date) < 1:
             flash('Please enter a date.', category='error')
         elif len(time) < 1:
@@ -47,6 +48,7 @@ def reserve():
                 user_id = current_user.id
             else:
                 user_id = None
+
             new_reservation = Reservation(
                 start_time=start_date_time,
                 end_time=end_date_time,
@@ -59,7 +61,9 @@ def reserve():
             db.session.add(new_reservation)
             db.session.commit()
             flash('Reservation created!', category='success')
-            return redirect(url_for('views.reservations'))
+
+            if(register_user == "on"):
+                return redirect(url_for('auth.register_with_reservation', reservation_id=new_reservation.id))
 
     return render_template('reserve.html', user=current_user)
 

@@ -6,6 +6,7 @@
 
     <ul>
         {% for reservation in reservations %}
+            {% if reservation.user_id == user.id %}
         <li>
             {{ reservation.start_time }} 
             {{ reservation.end_time }} 
@@ -17,6 +18,7 @@
             <a href="/edit-reservation/{{ reservation.id }}">Edit</a>
             <button onClick="deleteReservation({{ reservation.id }})">Delete note</button>
         </li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}}

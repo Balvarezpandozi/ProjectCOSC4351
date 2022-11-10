@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash
 from . import db
 from .models import User, Reservation, Table
 import json
@@ -40,14 +41,22 @@ def delete_table():
         db.session.commit()
     return jsonify({})
 
+@administrator.route('/delete-user', methods=['POST'])
+@login_required
+def delete_user():
+    user = json.loads(request.data)
+    user_id = user['userId']
+    user = User.query.get(user_id)
+    if current_user.account_type == 'admin': 
+        db.session.delete(user)
+        db.session.commit()
+    return jsonify({})
+
 @administrator.route('/set-admin')
 @login_required
 def set_admin():
-    if current_user.account_type != 'admin':
-        return redirect(url_for('views.landing'))
-    
     print("add administrator account", flush=True)
-    if User.query.filter_by().first() is None:
+    if User.query.filter_by(account_type='admin').first() is None:
         print("Inside if statement", flush=True)
         admin_user = User(
                 name="admin", 

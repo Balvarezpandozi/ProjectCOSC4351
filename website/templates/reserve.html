@@ -2,7 +2,7 @@
 {% block title %}Reserve{% endblock %}
 {% block content %}
     <h1>Make Reservation</h1>
-    <form method="POST">
+    <form method="POST" id="reservation-form">
         <label for="date">Date</label>
         <input type="date" name="date" id="date">
         <label for="time">Time</label>
@@ -16,5 +16,9 @@
         <label for="phone-number">Phone Number</label>
         <input type="text" name="phone-number" id="phone-number" value="{{ user.phone_number }}">
         <button type="submit">Reserve</button>
+        <input type="checkbox" name="register-user" id="register-user" style="display:none">
     </form>
+    {% if not user.is_authenticated %}
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/reservationLogic.js') }}"></script>
+    {% endif %}
 {% endblock %}
