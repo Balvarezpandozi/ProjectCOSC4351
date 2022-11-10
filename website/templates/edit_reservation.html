@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Edit Reservation{% endblock %}
+{% block content %}
+    <h1>Edit Reservation</h1>
+    <form method="POST">
+        <label for="date">Date</label>
+        <input type="date" name="date" id="date" value="{{ date }}">
+        <label for="time">Time</label>
+        <input type="time" name="time" id="time" value="{{ time }}">
+        <label for="party-size">Party Size</label>
+        <input type="number" name="party-size" id="party-size" value="{{ reservation.party_size }}">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" value="{{ reservation.name }}">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="{{ reservation.email }}">
+        <label for="phone-number">Phone Number</label>
+        <input type="text" name="phone-number" id="phone-number" value="{{ reservation.phone_number }}">
+        <button type="submit">Update Reservation</button>
+    </form>
+{% endblock %}

@@ -14,11 +14,13 @@ def create_app():
 
     from .auth import auth
     from .views import views
+    from .administrator import administrator
 
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(administrator, url_prefix='/admin')
 
-    from .models import User, Note
+    from .models import User
     create_db(app)
 
     login_manager = LoginManager()
