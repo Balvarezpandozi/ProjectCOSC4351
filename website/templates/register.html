@@ -20,7 +20,11 @@
         <label for="phone-number">Phone Number</label>
         <input type="text" name="phone-number" id="phone-number">
         <label for="preffered-payment">Preffered Payment</label>
-        <input type="text" name="preffered-payment" id="preffered-payment">
+        <select type="text" name="preffered-payment" id="preffered-payment">
+            <option value="credit-card">Credit Card</option>
+            <option value="cash">Cash</option>
+            <option value="check">Check</option>
+        </select>
         <button type="submit">Register</button>
     </form>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/registerFormLogic.js') }}"></script>
