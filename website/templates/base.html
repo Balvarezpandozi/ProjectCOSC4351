@@ -4,29 +4,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    {% if user.is_authenticated %}
-    <a href="/">home</a>
-    <a href="/logout">Logout</a>
-    {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">register</a>
-    {% endif %}
+    <nav>
+        <a href="/" class="title">Restaurant Reservation System</a>
+        <ul class="navbar-links">
+            {% if user.is_authenticated %}
+            <a href="/">home</a>
+            <a href="/logout">Logout</a>
+            {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">register</a>
+            {% endif %}
+        </ul>
+    </nav>
     
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div>
-                    {{ category }}: {{ message }}
+                <div class="flash-message-{{category}}">
+                    {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <div>
+    <div class="content">
         {% block content %}{% endblock %}
     </div>
+    <footer>
+        <p class="footer">Coded and Design by Bryan Alvarez and Caleb Rogers © 2022 Restaurant Reservation System</p>
+    </footer>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/main.js') }}"></script>
 </body>
 </html>

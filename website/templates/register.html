@@ -1,27 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
 {% block content %}
-    <h1>Register</h1>
-    <form method="POST" id="register-user-form">
+    <h1 class="content-title">Register</h1>
+    <form class="form" method="POST" id="register-user-form">
         <label for="name">Name</label>
-        <input type="text" name="name" id="name">
+        <input type="text" placeholder="James" name="name" id="name">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email">
+        <input type="email" placeholder="example@email.com" name="email" id="email">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input type="password" placeholder="Password" name="password" id="password">
         <label for="confirm-password">Confirm Password</label>
-        <input type="password" name="confirm-password" id="confirm-password">
+        <input type="password" placeholder="Confirm password" name="confirm-password" id="confirm-password">
         <label for="mailing-address">Mailing Address</label>
-        <input type="text" name="mailing-address" id="mailing-address">
-        <label for="billing-mailing-same">Is your billing adress the same as your mailing address?</label>
-        <input type="checkbox" name="billing-mailing-same" id="billing-mailing-same">
+        <input type="text" placeholder="47 North Golden Gate Place, Houston, TX 77665" name="mailing-address" id="mailing-address">
+        <div>
+            <label for="billing-mailing-same" id="billing-mailing-same-label">Is your billing adress the same as your mailing address?</label>
+            <input type="checkbox" name="billing-mailing-same" id="billing-mailing-same">
+        </div>
         <label for="billing-address" id="billing-address-label">Billing Address</label>
-        <input type="text" name="billing-address" id="billing-address">
+        <input type="text" placeholder="47 North Golden Gate Place, Houston, TX 77665" name="billing-address" id="billing-address">
         <label for="phone-number">Phone Number</label>
-        <input type="text" name="phone-number" id="phone-number">
+        <input type="text" placeholder="5555555555" name="phone-number" id="phone-number">
         <label for="preffered-payment">Preffered Payment</label>
-        <input type="text" name="preffered-payment" id="preffered-payment">
-        <button type="submit">Register</button>
+        <select type="text" name="preffered-payment" id="preffered-payment">
+            <option value="credit-card">Credit Card</option>
+            <option value="cash">Cash</option>
+            <option value="check">Check</option>
+        </select>
+        <button class="content-btn" type="submit">Register</button>
     </form>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/registerFormLogic.js') }}"></script>
 {% endblock %}
