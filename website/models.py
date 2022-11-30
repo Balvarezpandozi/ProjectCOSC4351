@@ -42,3 +42,4 @@ class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     capacity = db.Column(db.Integer)
     reservation_id = db.Column(db.Integer, db.ForeignKey('reservation.id'))
+    is_taken = db.Column(db.boolean) # not sure of the syntax here, but need a boolean value that lets one know if this table object is taken or not
