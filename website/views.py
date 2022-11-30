@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
-from .models import Reservation
+from .models import Reservation, Table, ReservationTables
 from . import db
 import json
 
@@ -58,6 +58,26 @@ def reserve():
                 user_id=user_id
             )
             db.session.add(new_reservation)
+            db.session.flush()
+            print(new_reservation.id, flush=True)
+
+            # Get tables
+            table_1 = Table.query.filter_by(id=1).first()
+            table_2 = Table.query.filter_by(id=2).first()
+
+            # Create relationships
+            table1Relationship = ReservationTables(
+                reservation_id = new_reservation.id,
+                table_id = table_1.id
+            )
+
+            table2Relationship = ReservationTables(
+                reservation_id = new_reservation.id,
+                table_id = table_2.id
+            )
+
+            db.session.add(table1Relationship)
+            db.session.add(table2Relationship)
             db.session.commit()
             flash('Reservation created!', category='success')
 
@@ -70,6 +90,7 @@ def reserve():
 @login_required
 def edit_reservation(reservation_id):
     reservation = Reservation.query.get(reservation_id)
+    reservation_tables = ReservationTables.query.filter_by(reservation_id = reservation_id).all() 
 
     if reservation.user_id != current_user.id and current_user.account_type != "admin":
         return redirect(url_for('views.reservations'))
@@ -103,6 +124,26 @@ def edit_reservation(reservation_id):
             reservation.name = name
             reservation.email = email
             reservation.phone_number = phone_number
+
+            map(db.session.delete, reservation_tables)
+            # Get tables
+            table_1 = Table.query.filter_by(id=1).first()
+            table_2 = Table.query.filter_by(id=2).first()
+
+            # Create relationships
+            table1Relationship = ReservationTables(
+                reservation_id = reservation.id,
+                table_id = table_1.id
+            )
+
+            table2Relationship = ReservationTables(
+                reservation_id = reservation.id,
+                table_id = table_2.id
+            )
+
+            db.session.add(table1Relationship)
+            db.session.add(table2Relationship)
+
             db.session.commit()
             flash('Reservation updated!', category='success')
             return redirect(url_for('views.reservations'))

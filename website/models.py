@@ -26,10 +26,15 @@ class Reservation(db.Model):
     name = db.Column(db.String(120))
     email = db.Column(db.String(120))
     phone_number = db.Column(db.String(120))
-    tables  = db.relationship('Table')
+    tables  = db.relationship('ReservationTables')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     capacity = db.Column(db.Integer)
+    reservations = db.relationship('ReservationTables')
+
+class ReservationTables(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     reservation_id = db.Column(db.Integer, db.ForeignKey('reservation.id'))
