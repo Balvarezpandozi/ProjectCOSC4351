@@ -9,7 +9,7 @@ function deleteReservation(reservationId) {
     fetch('/delete-reservation', {
         method: 'POST',
         body: JSON.stringify({ reservationId: reservationId }),
-    }).then((res) => { window.location.href = '/admin/'; });
+    }).then((res) => { window.location.href = '/reservations'; });
 }
 
 function deleteUser(userId) {

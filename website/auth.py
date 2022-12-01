@@ -88,7 +88,11 @@ def register_with_reservation(reservation_id):
         password = request.form.get('password')
         confirm_password = request.form.get('confirm-password')
         mailing_address = request.form.get('mailing-address')
-        billing_address = request.form.get('billing-address')
+        billing_address_same = request.form.get('billing-mailing-same')
+        if billing_address_same == 'on':
+            billing_address = mailing_address
+        else:
+            billing_address = request.form.get('billing-address')
         phone_number = request.form.get('phone-number')
         preffered_payment_method = request.form.get('preffered-payment')
 

@@ -1,0 +1,255 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+  
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #444;
+    background-color: #f3f3f3;
+    height: 100vh;
+    padding: 2rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+  }
+
+.title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #444;
+  }
+
+.navbar-links {
+    list-style: none;
+}
+
+.navbar-links a {
+    display: inline-block;
+    border: none;
+    padding: 1rem 1rem;
+    font-size: 1.6rem;
+    font-family: inherit;
+    text-align: center;
+    width: 12rem;
+    border-radius: 10rem;
+    margin-right: 1rem;
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(to top left, #4af8b6, #a9f369);
+    transition: all 0.3s;
+}
+
+.navbar-links a:hover {
+    color: #000;
+    transform: translateY(-3px);
+    transform: scale(1.1);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.flash-message-success {
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2rem;
+    position: relative;
+    max-width: 100rem;
+    height: fit-content;
+    margin: 4rem auto;
+    transition: all 1s;
+    background-image: linear-gradient(to top left, #ffdf76, #ffcb22);
+}
+
+.flash-message-error {
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2rem;
+    position: relative;
+    max-width: 100rem;
+    height: fit-content;
+    margin: 4rem auto;
+    transition: all 1s;
+    background-image: linear-gradient(to top left, #fa2e2e, #fc5d5d);
+}
+
+.flash-message-message {
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2rem;
+    position: relative;
+    max-width: 100rem;
+    height: fit-content;
+    margin: 4rem auto;
+    transition: all 1s;
+    background-image: linear-gradient(to top left, #fa2e2e, #fc5d5d);
+}
+
+.content {
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 4rem;
+    position: relative;
+    max-width: 100rem;
+    height: fit-content;
+    margin: 4rem auto;
+    transition: all 1s;
+    background-image: linear-gradient(to top left, #4af8b6, #a9f369);
+}
+
+.content:hover {
+    color: #000;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2);
+    transform: scale(1.001);
+}
+
+.content-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.content-subtitle {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 1rem;
+    
+}
+
+.content-btn {
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 1.5rem;
+    border: #444 1px solid;
+    padding: 1rem 2rem;
+    font-size: 1.6rem;
+    margin: 1rem 1rem;
+    background-image: linear-gradient(to top left, #ffdf76, #ffcb22);
+    transition: all 0.3s;
+}
+
+.content-btn:hover {
+    transform: scale(1.01);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    border: rgba(0,0,0,0) 1px solid;
+}
+
+.delete-btn {
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 1.5rem;
+    border: #444 1px solid;
+    padding: 1rem 2rem;
+    font-size: 1.6rem;
+    margin: 1rem 1rem;
+    background-image: linear-gradient(to top left, #fa2e2e, #fc5d5d);
+    transition: all 0.3s;
+}
+
+.delete-btn:hover {
+    transform: scale(1.01);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    border: rgba(0,0,0,0) 1px solid;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form label {
+    padding-left: 1rem;
+    margin: 1rem 1rem;
+    font-size: 1.6rem;
+}
+
+.form input, .form select {
+    border-radius: 1.5rem;
+    margin: 1rem 1rem;
+    padding: 1rem;
+    background-color: #eee;
+}
+
+.credit-card-modal {
+    flex-direction: column;
+    display: none;
+    transition: 0.3s;
+}
+
+.credit-card-modal p {
+    font-size: 1.6rem;
+    padding: 1rem;
+    margin: 1rem 1rem;
+    font-weight: 700;
+}
+
+.reservations-list {
+    margin: 1rem;
+    list-style: none;
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.reservation {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 45%;
+    padding: 1rem;
+}
+
+.reservation label {
+    padding-left: 1rem;
+    margin: 1rem 1rem;
+    font-size: 1.6rem;
+    width: 30%;
+}
+
+.reservation input {
+    border-radius: 1.5rem;
+    margin: 1rem 1rem;
+    padding: 1rem;
+    background-color: #eee;
+    width: 30%;
+}
+
+.reservation div button {
+    width: 30%;
+}
+
+.footer {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.admin-divisor {
+    margin: 1rem auto;
+    width: 90%;
+    background-color: #444;
+    height: 1px;
+}
+
+.admin-divisor {
+    background-color: #000;
+}

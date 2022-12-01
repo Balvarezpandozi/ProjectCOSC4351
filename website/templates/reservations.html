@@ -1,22 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Landing{% endblock %}
 {% block content %}
-    <h1>Reservations</h1>
-    <a href="/reserve">Make Reservation</a>
+    <h1 class="content-title">Reservations</h1>
+    <a class="content-btn" href="/reserve">Make Reservation</a>
 
-    <ul>
+    <ul class="reservations-list">
         {% for reservation in reservations %}
             {% if reservation.user_id == user.id %}
-        <li>
-            {{ reservation.start_time }} 
-            {{ reservation.end_time }} 
-            {{ reservation.party_size }} 
-            {{ reservation.name }} 
-            {{ reservation.email }} 
-            {{ reservation.phone_number }}
-            {{ reservation.user_id }}
-            <a href="/edit-reservation/{{ reservation.id }}">Edit</a>
-            <button onClick="deleteReservation({{ reservation.id }})">Delete note</button>
+        <li class="reservation">
+            <p><b>Date:</b> {{ reservation.start_time.strftime('%B / %d / %Y') }}</p> 
+            <p><b>Time:</b> {{ reservation.start_time.strftime('%I:%M %p') }}</p> 
+            <p><b>Party Size:</b> {{ reservation.party_size }} people</p> 
+            <p><b>Name:</b> {{ reservation.name }}</p>
+            <p><b>Email:</b> {{ reservation.email }}</p>
+            <p><b>Phone Number:</b> {{ reservation.phone_number }}</p>
+            <a class="content-btn" href="/edit-reservation/{{ reservation.id }}">Edit</a>
+            <button class="delete-btn" onClick="deleteReservation({{ reservation.id }})">Delete Reservation</button>
         </li>
             {% endif %}
         {% endfor %}

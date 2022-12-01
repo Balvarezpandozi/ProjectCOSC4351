@@ -1,52 +1,60 @@
 {% extends "base.html" %}
 {% block title %}Admin Portal{% endblock %}
 {% block content %}
-    <h1>ADMIN PORTAL</h1>
-    <h2>Tables</h2>
-    <form action="/admin/add-table" method="POST">
+    <h1 class="content-title">ADMIN PORTAL</h1>
+    <h2 class="content-subtitle">Tables</h2>
+    <form class="form" action="/admin/add-table" method="POST">
         <label for="capacity">Capacity</label>
         <input type="number" name="capacity" id="capacity">
-        <button type="submit">Submit</button>
+        <button class="content-btn" type="submit">Add table</button>
     </form>
-    <ul>
+    <ul class="reservations-list">
         {% for table in tables %}
-        <li>
-            {{ table.id }} - 
-            {{ table.capacity }}  
-            <button onClick="deleteTable({{ table.id }})">Delete table</button>
+        <li class="reservation">
+            <p><b>Table ID: </b>{{ table.id }}</p> 
+            <p><b>Capacity: </b> {{ table.capacity }}</p>  
+            <button class="delete-btn" onClick="deleteTable({{ table.id }})">Delete table</button>
         </li>
         {% endfor %}
     </ul>
-    <h2>Reservations</h2>
-    <a href="/reserve">Make Reservation</a>
-    <ul>
+    <span class="admin-divisor"></span>
+    <h2 class="content-subtitle">Reservations</h2>
+    <a class="content-btn" href="/reserve">Make Reservation</a>
+    <ul class="reservations-list">
         {% for reservation in reservations %}
-        <li>
-            {{ reservation.start_time }} 
-            {{ reservation.end_time }} 
-            {{ reservation.party_size }} 
-            {{ reservation.name }} 
-            {{ reservation.email }} 
-            {{ reservation.phone_number }}
-            {{ reservation.user_id }}
-            <a href="/edit-reservation/{{ reservation.id }}">Edit</a>
-            <button onClick="deleteReservation({{ reservation.id }})">Delete reservation</button>
+        <li class="reservation">
+            <p><b>User ID:</b> {{ reservation.id }}</p>
+            <p><b>Start Time:</b> {{ reservation.start_time.strftime('%B / %d / %Y - %I:%M %p') }}</p>
+            <p><b>End Time:</b> {{ reservation.end_time.strftime('%B / %d / %Y - %I:%M %p') }}</p>
+            <p><b>Party Size:</b> {{ reservation.party_size }} people</p> 
+            <p><b>Name:</b> {{ reservation.name }}</p>
+            <p><b>Email:</b> {{ reservation.email }}</p>
+            <p><b>Phone Number:</b> {{ reservation.phone_number }}</p>
+            <a class="content-btn" href="/edit-reservation/{{ reservation.id }}">Edit</a>
+            <button class="delete-btn" onClick="deleteReservation({{ reservation.id }})">Delete reservation</button>
         </li>
         {% endfor %}
     </ul>
-    <h2>Users</h2>
-    <a href="/add-user">Add User</a>
-    <ul>
+    <span class="admin-divisor"></span>
+    <h2 class="content-subtitle">Users</h2>
+    <ul class="reservations-list">
         {% for one_user in users %}
-        <li>
-            {{ one_user.username }} 
-            {{ one_user.password }} 
-            {{ one_user.email }} 
-            {{ one_user.phone_number }} 
-            {{ one_user.is_admin }} 
-            <a href="/edit-user/{{ one_user.id }}">Edit</a>
-            <button onClick="deleteUser({{ one_user.id }})">Delete user</button>
+        <li class="reservation">
+            <p><b>Name: </b> {{ one_user.name }}</p> 
+            <p><b>Email: </b> {{ one_user.email }}</p>
+            <p><b>Phone number: </b> {{ one_user.phone_number }}</p> 
+            <p><b>Mailing Address: </b>{{one_user.mailing_address}}</p>
+            <p><b>Billing Address: </b>{{one_user.billing_address}}</p>
+            <p><b>Preffered Payment: </b>{{one_user.preffered_payment_method}}</p>
+            <p><b>Points: </b><span id="user-points-{{one_user.id}}">{{one_user.points}}</span> total</p>
+            <div>
+                <label for="add-points-{{one_user.id}}">Add Points</label>
+                <input type="number" name="add-points-{{one_user.id}}" id="add-points-{{one_user.id}}">
+                <button class="content-btn" onClick="addPoints({{one_user.id}})">Add Points</button>
+            </div>
+            <button class="delete-btn" onClick="deleteUser({{ one_user.id }})">Delete user</button>
         </li>
         {% endfor %}
     </ul>
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/adminPointSystem.js') }}"></script>
 {% endblock %}

@@ -41,6 +41,17 @@ def delete_table():
         db.session.commit()
     return jsonify({})
 
+@administrator.route('/add-points/<points>/<userId>', methods=['POST'])
+@login_required
+def add_points(points, userId):
+    if current_user.account_type != 'admin':
+        return redirect(url_for('views.landing'))
+    
+    user = User.query.get(userId)
+    user.points += int(points)
+    db.session.commit()
+    return jsonify({"points": user.points})
+
 @administrator.route('/delete-user', methods=['POST'])
 @login_required
 def delete_user():
