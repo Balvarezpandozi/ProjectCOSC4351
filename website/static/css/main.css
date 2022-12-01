@@ -190,9 +190,8 @@ nav {
 }
 
 .credit-card-modal {
-    display: flex;
     flex-direction: column;
-    /* display: none; */
+    display: none;
     transition: 0.3s;
 }
 

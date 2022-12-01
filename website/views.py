@@ -60,7 +60,13 @@ def reserve():
                 flash('Please enter a time between 10:00 AM and 9:00 PM.', category='error')
                 return render_template('reserve.html', user=current_user)
 
-            if check_for_high_traffic(start_date_time) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
+            dateDict = {
+                'year': date[0],
+                'month': date[1],
+                'day': date[2]
+            }
+
+            if check_for_high_traffic(dateDict) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
                 flash('Please enter credit card info.', category='error')
                 return render_template('reserve.html', user=current_user)
 
@@ -78,7 +84,6 @@ def reserve():
             )
             db.session.add(new_reservation)
             db.session.flush()
-            print(new_reservation.id, flush=True)
 
             # Get tables
             table_1 = Table.query.filter_by(id=1).first()
@@ -147,6 +152,10 @@ def edit_reservation(reservation_id):
                 flash('Please enter a time between 10:00 AM and 9:00 PM.', category='error')
                 return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
 
+            if check_for_high_traffic(start_date_time) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
+                flash('Please enter credit card info.', category='error')
+                return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
+
 
             reservation.start_time = start_date_time
             reservation.end_time = end_date_time
@@ -199,11 +208,13 @@ def high_traffic():
     if request.method == 'POST':
         data = json.loads(request.data)
         date = data['date'].split('-')
+        year = int(date[0])
         month = int(date[1])
         day = int(date[2])
         dateDict = {
-            "month": month,
-            "day": day
+            'year': year,
+            'month': month,
+            'day': day
         }
         isHighTraffic = check_for_high_traffic(dateDict)
         return jsonify({"isHighTraffic": isHighTraffic})

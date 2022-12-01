@@ -29,7 +29,7 @@ class Reservation(db.Model):
     credit_card_number = db.Column(db.String(120))
     credit_card_expiration_date = db.Column(db.String(120))
     credit_card_cvv = db.Column(db.String(120))
-    tables  = db.relationship('Table')
+    tables  = db.relationship('ReservationTables')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Table(db.Model):

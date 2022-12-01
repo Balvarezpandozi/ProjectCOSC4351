@@ -15,12 +15,15 @@ HOLIDAYS = [
     {'month': 12, 'day': 31}, # New Year's Eve
 ]
 
-def check_for_high_traffic(start_time):
-    reservationDate = start_time
-    
+def check_for_high_traffic(dateDict):
+    reservationDate = {
+        'year': dateDict['year'],
+        'month': dateDict['month'],
+        'day': dateDict['day']
+    }
     # Check if date is a holiday
     for holiday in HOLIDAYS:
-        if holiday == reservationDate:
+        if holiday['day'] == reservationDate['day'] and holiday['month'] == reservationDate['month']:
             return True
     
     # Check if restaurant booking is above 50% capacity
@@ -37,7 +40,8 @@ def check_for_high_traffic(start_time):
     reservations = Reservation.query.all()
     amountOfPeopleBooked = 0
     for reservation in reservations:
-        amountOfPeopleBooked += reservation.party_size
+        if reservation.start_time.year == reservationDate['year'] and reservation.start_time.month == reservationDate['month'] and reservation.start_time.day == reservationDate['day']:
+            amountOfPeopleBooked += reservation.party_size
 
     # Check if amount of people booked is above 50% of capacity
     if amountOfPeopleBooked > maxCapacity * 0.5:
