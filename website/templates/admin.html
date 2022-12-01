@@ -46,9 +46,15 @@
             <p><b>Mailing Address: </b>{{one_user.mailing_address}}</p>
             <p><b>Billing Address: </b>{{one_user.billing_address}}</p>
             <p><b>Preffered Payment: </b>{{one_user.preffered_payment_method}}</p>
-            <a class="content-btn" href="/edit-user/{{ one_user.id }}">Edit</a>
+            <p><b>Points: </b><span id="user-points-{{one_user.id}}">{{one_user.points}}</span> total</p>
+            <div>
+                <label for="add-points-{{one_user.id}}">Add Points</label>
+                <input type="number" name="add-points-{{one_user.id}}" id="add-points-{{one_user.id}}">
+                <button class="content-btn" onClick="addPoints({{one_user.id}})">Add Points</button>
+            </div>
             <button class="delete-btn" onClick="deleteUser({{ one_user.id }})">Delete user</button>
         </li>
         {% endfor %}
     </ul>
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/adminPointSystem.js') }}"></script>
 {% endblock %}
