@@ -189,6 +189,20 @@ nav {
     background-color: #eee;
 }
 
+.credit-card-modal {
+    display: flex;
+    flex-direction: column;
+    /* display: none; */
+    transition: 0.3s;
+}
+
+.credit-card-modal p {
+    font-size: 1.6rem;
+    padding: 1rem;
+    margin: 1rem 1rem;
+    font-weight: 700;
+}
+
 .reservations-list {
     margin: 1rem;
     list-style: none;

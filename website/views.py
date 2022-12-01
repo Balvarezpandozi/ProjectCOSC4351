@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from datetime import datetime
 from .models import Reservation, Table, ReservationTables
+from .highTrafficMonitoring import check_for_high_traffic
 from . import db
 import json
 
@@ -20,16 +21,17 @@ def reservations():
 @views.route('/reserve', methods=['GET', 'POST'])
 def reserve():
     if request.method == 'POST':
-        date = list(map(lambda x: int(x), request.form.get('date').split('-')))
-        time = list(map(lambda x: int(x), request.form.get('time').split(':')))
+        date = request.form.get('date')
+        time = request.form.get('time')
         party_size = request.form.get('party-size')
         name = request.form.get('name')
         email = request.form.get('email')
         phone_number = request.form.get('phone-number')
-        start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
-        end_date_time = datetime(date[0], date[1], date[2], time[0]+1, time[1])
         register_user = request.form.get('register-user')
-        print(register_user, flush=True)
+        credit_card_number = request.form.get('credit-card-number')
+        credit_card_expiration_date = request.form.get('credit-card-expiration-date')
+        credit_card_cvv = request.form.get('credit-card-cvv') 
+        
         if len(date) < 1:
             flash('Please enter a date.', category='error')
         elif len(time) < 1:
@@ -48,6 +50,20 @@ def reserve():
             else:
                 user_id = None
 
+            date = list(map(lambda x: int(x), date.split('-')))
+            time = list(map(lambda x: int(x), time.split(':')))
+
+            start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+            end_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+
+            if not check_time_range(start_date_time):
+                flash('Please enter a time between 10:00 AM and 9:00 PM.', category='error')
+                return render_template('reserve.html', user=current_user)
+
+            if check_for_high_traffic(start_date_time) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
+                flash('Please enter credit card info.', category='error')
+                return render_template('reserve.html', user=current_user)
+
             new_reservation = Reservation(
                 start_time=start_date_time,
                 end_time=end_date_time,
@@ -55,7 +71,10 @@ def reserve():
                 name=name,
                 email=email,
                 phone_number=phone_number,
-                user_id=user_id
+                user_id=user_id,
+                credit_card_number= credit_card_number,
+                credit_card_expiration_date= credit_card_expiration_date,
+                credit_card_cvv= credit_card_cvv
             )
             db.session.add(new_reservation)
             db.session.flush()
@@ -96,14 +115,15 @@ def edit_reservation(reservation_id):
         return redirect(url_for('views.reservations'))
 
     if request.method == 'POST':
-        date = list(map(lambda x: int(x), request.form.get('date').split('-')))
-        time = list(map(lambda x: int(x), request.form.get('time').split(':')))
+        date = request.form.get('date')
+        time = request.form.get('time')
         party_size = request.form.get('party-size')
         name = request.form.get('name')
         email = request.form.get('email')
         phone_number = request.form.get('phone-number')
-        start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
-        end_date_time = datetime(date[0], date[1], date[2], time[0]+1, time[1])
+        credit_card_number = request.form.get('credit-card-number')
+        credit_card_expiration_date = request.form.get('credit-card-expiration-date')
+        credit_card_cvv = request.form.get('credit-card-cvv')
 
         if len(date) < 1:
             flash('Please enter a date.', category='error')
@@ -118,6 +138,16 @@ def edit_reservation(reservation_id):
         elif len(phone_number) < 1:
             flash('Please enter a phone number.', category='error')
         else:
+            date = list(map(lambda x: int(x), date.split('-')))
+            time = list(map(lambda x: int(x), time.split(':')))
+            start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+            end_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+
+            if not check_time_range(start_date_time):
+                flash('Please enter a time between 10:00 AM and 9:00 PM.', category='error')
+                return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
+
+
             reservation.start_time = start_date_time
             reservation.end_time = end_date_time
             reservation.party_size = party_size
@@ -144,6 +174,9 @@ def edit_reservation(reservation_id):
             db.session.add(table1Relationship)
             db.session.add(table2Relationship)
 
+            reservation.credit_card_number = credit_card_number
+            reservation.credit_card_expiration_date = credit_card_expiration_date
+            reservation.credit_card_cvv = credit_card_cvv
             db.session.commit()
             flash('Reservation updated!', category='success')
             return redirect(url_for('views.reservations'))
@@ -160,3 +193,25 @@ def delete_reservation():
         db.session.delete(reservation)
         db.session.commit()
     return jsonify({})
+
+@views.route('/high-traffic', methods=['POST']) 
+def high_traffic():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        date = data['date'].split('-')
+        month = int(date[1])
+        day = int(date[2])
+        dateDict = {
+            "month": month,
+            "day": day
+        }
+        isHighTraffic = check_for_high_traffic(dateDict)
+        return jsonify({"isHighTraffic": isHighTraffic})
+
+def check_time_range(start_time):
+    hour = start_time.hour
+    # Openning hours between 10am and 10pm
+    if hour < 10 or hour > 21:
+        return False
+    return True
+    
