@@ -26,6 +26,9 @@ class Reservation(db.Model):
     name = db.Column(db.String(120))
     email = db.Column(db.String(120))
     phone_number = db.Column(db.String(120))
+    credit_card_number = db.Column(db.String(120))
+    credit_card_expiration_date = db.Column(db.String(120))
+    credit_card_cvv = db.Column(db.String(120))
     tables  = db.relationship('ReservationTables')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
