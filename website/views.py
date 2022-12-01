@@ -3,8 +3,11 @@ from flask_login import login_required, current_user
 from datetime import datetime
 from .models import Reservation, Table, ReservationTables
 from .high_traffic_monitoring import check_for_high_traffic
+from .reservation_handler import check_table_availability
 from . import db
 import json
+
+import sys
 
 views = Blueprint('views', __name__)
 
@@ -54,7 +57,7 @@ def reserve():
             time = list(map(lambda x: int(x), time.split(':')))
 
             start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
-            end_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+            end_date_time = datetime(date[0], date[1], date[2], time[0]+1, time[1])
 
             if not check_time_range(start_date_time):
                 flash('Please enter a time between 10:00 AM and 9:00 PM.', category='error')
@@ -68,6 +71,12 @@ def reserve():
 
             if check_for_high_traffic(dateDict) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
                 flash('Please enter credit card info.', category='error')
+                return render_template('reserve.html', user=current_user)
+
+            # Get tables
+            tables = check_table_availability(start_date_time, end_date_time, int(party_size))
+            if len(tables) == 0:
+                flash('No tables available for that time.', category='error')
                 return render_template('reserve.html', user=current_user)
 
             new_reservation = Reservation(
@@ -85,23 +94,14 @@ def reserve():
             db.session.add(new_reservation)
             db.session.flush()
 
-            # Get tables
-            table_1 = Table.query.filter_by(id=1).first()
-            table_2 = Table.query.filter_by(id=2).first()
-
             # Create relationships
-            table1Relationship = ReservationTables(
-                reservation_id = new_reservation.id,
-                table_id = table_1.id
-            )
+            for table in tables:
+                new_reservation_table = ReservationTables(
+                    reservation_id=new_reservation.id,
+                    table_id=table.id
+                )
+                db.session.add(new_reservation_table)
 
-            table2Relationship = ReservationTables(
-                reservation_id = new_reservation.id,
-                table_id = table_2.id
-            )
-
-            db.session.add(table1Relationship)
-            db.session.add(table2Relationship)
             db.session.commit()
             flash('Reservation created!', category='success')
 
@@ -146,13 +146,19 @@ def edit_reservation(reservation_id):
             date = list(map(lambda x: int(x), date.split('-')))
             time = list(map(lambda x: int(x), time.split(':')))
             start_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
-            end_date_time = datetime(date[0], date[1], date[2], time[0], time[1])
+            end_date_time = datetime(date[0], date[1], date[2], time[0]+1, time[1])
 
             if not check_time_range(start_date_time):
                 flash('Please enter a time between 10:00 AM and 9:00 PM.', category='error')
                 return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
 
-            if check_for_high_traffic(start_date_time) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
+            dateDict = {
+                'year': date[0],
+                'month': date[1],
+                'day': date[2]
+            }
+
+            if check_for_high_traffic(dateDict) and (credit_card_number == "" or credit_card_expiration_date == "" or credit_card_cvv == ""):
                 flash('Please enter credit card info.', category='error')
                 return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
 
@@ -165,23 +171,22 @@ def edit_reservation(reservation_id):
             reservation.phone_number = phone_number
 
             map(db.session.delete, reservation_tables)
+            
             # Get tables
-            table_1 = Table.query.filter_by(id=1).first()
-            table_2 = Table.query.filter_by(id=2).first()
+            tables = check_table_availability(start_date_time, end_date_time, int(party_size))
+            if len(tables) == 0:
+                flash('No tables available for that time.', category='error')
+                return render_template('edit_reservation.html', user=current_user, reservation=reservation, date=reservation.start_time.strftime('%Y-%m-%d'), time=reservation.start_time.strftime('%H:%M'))
 
             # Create relationships
-            table1Relationship = ReservationTables(
-                reservation_id = reservation.id,
-                table_id = table_1.id
-            )
+            for table in tables:
+                new_reservation_table = ReservationTables(
+                    reservation_id=reservation.id,
+                    table_id=table.id
+                )
+                db.session.add(new_reservation_table)
 
-            table2Relationship = ReservationTables(
-                reservation_id = reservation.id,
-                table_id = table_2.id
-            )
-
-            db.session.add(table1Relationship)
-            db.session.add(table2Relationship)
+            db.session.commit()
 
             reservation.credit_card_number = credit_card_number
             reservation.credit_card_expiration_date = credit_card_expiration_date
