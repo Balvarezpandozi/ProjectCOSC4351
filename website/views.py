@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from datetime import datetime
 from .models import Reservation, Table, ReservationTables
-from .highTrafficMonitoring import check_for_high_traffic
+from .high_traffic_monitoring import check_for_high_traffic
 from . import db
 import json
 

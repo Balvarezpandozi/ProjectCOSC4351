@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     billing_address = db.Column(db.String(120))
     phone_number = db.Column(db.String(120))
     preffered_payment_method = db.Column(db.String(120))
-    points = db.Column(db.Integer)
+    points = db.Column(db.Integer, default=0)
     password = db.Column(db.String(80))
     account_type = db.Column(db.String(80))
     reservations = db.relationship('Reservation')
